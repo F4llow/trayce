@@ -4,14 +4,14 @@ from PIL import Image, ImageDraw, ImageFont
 import base64
 import io
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
+import google.generativeai as genai
+from google.generativeai import types
 
 # Load environment variables
 load_dotenv()
 
 # Configure the Gemini API client
-client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
 
 # System instructions for bounding box detection
 BOUNDING_BOX_SYSTEM_INSTRUCTIONS = """
@@ -21,9 +21,9 @@ If an object is present multiple times, name them according to their unique char
 
 # Safety settings
 SAFETY_SETTINGS = [
-    types.SafetySetting(
-        category="HARM_CATEGORY_DANGEROUS_CONTENT",
-        threshold="BLOCK_ONLY_HIGH",
+    types.SafetySettingDict(
+        category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+        threshold=types.HarmBlockThreshold.BLOCK_ONLY_HIGH,
     ),
 ]
 
@@ -56,15 +56,27 @@ class GeminiSpatial:
             # Resize image if needed
             img.thumbnail([1024, 1024], Image.Resampling.LANCZOS if hasattr(Image, 'Resampling') else Image.LANCZOS)
             
-            # Run model to find bounding boxes
-            response = client.models.generate_content(
-                model=self.model_name,
-                contents=[prompt, img],
-                config=types.GenerateContentConfig(
-                    system_instruction=BOUNDING_BOX_SYSTEM_INSTRUCTIONS,
+            # Convert PIL Image to bytes for Gemini API
+            img_byte_arr = io.BytesIO()
+            img.save(img_byte_arr, format='JPEG')
+            img_bytes = img_byte_arr.getvalue()
+            
+            # Add system instructions to the prompt
+            full_prompt = BOUNDING_BOX_SYSTEM_INSTRUCTIONS + "\n\n" + prompt
+            
+            # Create Gemini model
+            model = genai.GenerativeModel(model_name=self.model_name)
+            
+            # Generate content
+            response = model.generate_content(
+                contents=[
+                    full_prompt,
+                    {"mime_type": "image/jpeg", "data": img_bytes}
+                ],
+                generation_config=genai.GenerationConfig(
                     temperature=0.5,
-                    safety_settings=SAFETY_SETTINGS,
-                )
+                ),
+                safety_settings=SAFETY_SETTINGS
             )
             
             # Parse the response
@@ -123,15 +135,27 @@ class GeminiSpatial:
             # Resize image if needed
             img.thumbnail([1024, 1024], Image.Resampling.LANCZOS if hasattr(Image, 'Resampling') else Image.LANCZOS)
             
-            # Run model to find bounding boxes
-            response = client.models.generate_content(
-                model=self.model_name,
-                contents=[prompt, img],
-                config=types.GenerateContentConfig(
-                    system_instruction=BOUNDING_BOX_SYSTEM_INSTRUCTIONS,
+            # Convert PIL Image to bytes for Gemini API
+            img_byte_arr = io.BytesIO()
+            img.save(img_byte_arr, format='JPEG')
+            img_bytes = img_byte_arr.getvalue()
+            
+            # Add system instructions to the prompt
+            full_prompt = BOUNDING_BOX_SYSTEM_INSTRUCTIONS + "\n\n" + prompt
+            
+            # Create Gemini model
+            model = genai.GenerativeModel(model_name=self.model_name)
+            
+            # Generate content
+            response = model.generate_content(
+                contents=[
+                    full_prompt,
+                    {"mime_type": "image/jpeg", "data": img_bytes}
+                ],
+                generation_config=genai.GenerationConfig(
                     temperature=0.5,
-                    safety_settings=SAFETY_SETTINGS,
-                )
+                ),
+                safety_settings=SAFETY_SETTINGS
             )
             
             # Parse the response
@@ -237,10 +261,12 @@ class GeminiSpatial:
                     if "label" in box:
                         label = box["label"]
                         # Get text size
-                        if hasattr(draw, 'textsize'):
-                            text_width, text_height = draw.textsize(label, font=font)
-                        else:
+                        if hasattr(font, 'getsize'):
                             text_width, text_height = font.getsize(label)
+                        else:
+                            # For newer Pillow versions
+                            left, top, right, bottom = font.getbbox(label)
+                            text_width, text_height = right - left, bottom - top
                         
                         # Draw text background
                         draw.rectangle([x1, y1 - text_height - 4, x1 + text_width + 4, y1], fill=color)
@@ -249,9 +275,8 @@ class GeminiSpatial:
             
             return img
         except Exception as e:
-            print(f"Error drawing bounding boxes: {e}")               
+            print(f"Error drawing bounding boxes: {e}")
             return img
-      
     
     def _draw_categorized_boxes(self, img, bounding_boxes_json):
         """
@@ -308,10 +333,12 @@ class GeminiSpatial:
                     # Draw label with category
                     label = f"{box.get('label', 'Unknown')} ({category})"
                     # Get text size
-                    if hasattr(draw, 'textsize'):
-                        text_width, text_height = draw.textsize(label, font=font)
-                    else:
+                    if hasattr(font, 'getsize'):
                         text_width, text_height = font.getsize(label)
+                    else:
+                        # For newer Pillow versions
+                        left, top, right, bottom = font.getbbox(label)
+                        text_width, text_height = right - left, bottom - top
                     
                     # Draw text background
                     draw.rectangle([x1, y1 - text_height - 4, x1 + text_width + 4, y1], fill=color)
