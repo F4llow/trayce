@@ -7,6 +7,8 @@ from ultralytics import YOLO
 from werkzeug.utils import secure_filename
 from gemini_spatial import GeminiSpatial
 from dotenv import load_dotenv
+from recyability import compute_tray_score
+
 
 # Load environment variables
 load_dotenv()
@@ -219,10 +221,13 @@ def analyze_tray():
         
         # Process the uploaded image with Gemini for tray analysis
         img_base64, categorized_items = gemini.analyze_tray(file_path)
+
+        tray_score = compute_tray_score(categorized_items)
         
         return jsonify({
             'image': f"data:image/jpeg;base64,{img_base64}",
-            'categorized_items': categorized_items
+            'categorized_items': categorized_items,
+            'tray_score': tray_score
         })
 
 if __name__ == '__main__':
