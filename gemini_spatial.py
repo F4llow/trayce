@@ -184,8 +184,141 @@ class GeminiSpatial:
             return "[]"
     
     def _draw_bounding_boxes(self, img, bounding_boxes_json):
+        """
+        Draw bounding boxes on an image
+        """
+        # Define colors for bounding boxes
+        colors = [
+            'red', 'green', 'blue', 'yellow', 'orange', 'pink', 'purple',
+            'brown', 'gray', 'cyan', 'magenta', 'lime', 'navy', 'teal',
+            'olive', 'coral', 'lavender', 'violet', 'gold', 'silver'
+        ]
+        
+        # Create a drawing object
+        draw = ImageDraw.Draw(img)
+        width, height = img.size
+        
+        # Try to load a font, with fallback options
+        try:
+            font = ImageFont.truetype("Arial.ttf", 14)
+        except IOError:
+            try:
+                font = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial.ttf", 14)
+            except IOError:
+                font = ImageFont.load_default()
+        
+        # Parse the JSON
+        try:
+            bounding_boxes = json.loads(bounding_boxes_json)
+            
+            # Draw each bounding box
+            for i, box in enumerate(bounding_boxes):
+                color = colors[i % len(colors)]
+                
+                # Extract coordinates and normalize if needed
+                if "box_2d" in box:
+                    coords = box["box_2d"]
+                    # Convert normalized coordinates (0-1000) to pixel values
+                    y1 = int(coords[0] / 1000 * height)
+                    x1 = int(coords[1] / 1000 * width)
+                    y2 = int(coords[2] / 1000 * height)
+                    x2 = int(coords[3] / 1000 * width)
+                    
+                    # Ensure coordinates are in the right order
+                    if x1 > x2:
+                        x1, x2 = x2, x1
+                    if y1 > y2:
+                        y1, y2 = y2, y1
+                    
+                    # Draw rectangle
+                    draw.rectangle([x1, y1, x2, y2], outline=color, width=3)
+                    
+                    # Draw label
+                    if "label" in box:
+                        label = box["label"]
+                        # Get text size
+                        if hasattr(draw, 'textsize'):
+                            text_width, text_height = draw.textsize(label, font=font)
+                        else:
+                            text_width, text_height = font.getsize(label)
+                        
+                        # Draw text background
+                        draw.rectangle([x1, y1 - text_height - 4, x1 + text_width + 4, y1], fill=color)
+                        # Draw text
+                        draw.text((x1 + 2, y1 - text_height - 2), label, fill="white", font=font)
+            
+            return img
+        except Exception as e:
+            print(f"Error drawing bounding boxes: {e}")               
             return img
       
     
     def _draw_categorized_boxes(self, img, bounding_boxes_json):
+        """
+        Draw categorized bounding boxes on an image
+        """
+        # Define colors for different categories
+        category_colors = {
+            "trash": "red",
+            "recycling": "blue",
+            "compost": "green",
+            "dish_return": "yellow"
+        }
+        
+        # Create a drawing object
+        draw = ImageDraw.Draw(img)
+        width, height = img.size
+        
+        # Try to load a font, with fallback options
+        try:
+            font = ImageFont.truetype("Arial.ttf", 14)
+        except IOError:
+            try:
+                font = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial.ttf", 14)
+            except IOError:
+                font = ImageFont.load_default()
+        
+        # Parse the JSON
+        try:
+            bounding_boxes = json.loads(bounding_boxes_json)
+            
+            # Draw each bounding box
+            for box in bounding_boxes:
+                category = box.get("category", "unknown").lower()
+                color = category_colors.get(category, "purple")
+                
+                # Extract coordinates and normalize if needed
+                if "box_2d" in box:
+                    coords = box["box_2d"]
+                    # Convert normalized coordinates (0-1000) to pixel values
+                    y1 = int(coords[0] / 1000 * height)
+                    x1 = int(coords[1] / 1000 * width)
+                    y2 = int(coords[2] / 1000 * height)
+                    x2 = int(coords[3] / 1000 * width)
+                    
+                    # Ensure coordinates are in the right order
+                    if x1 > x2:
+                        x1, x2 = x2, x1
+                    if y1 > y2:
+                        y1, y2 = y2, y1
+                    
+                    # Draw rectangle
+                    draw.rectangle([x1, y1, x2, y2], outline=color, width=3)
+                    
+                    # Draw label with category
+                    label = f"{box.get('label', 'Unknown')} ({category})"
+                    # Get text size
+                    if hasattr(draw, 'textsize'):
+                        text_width, text_height = draw.textsize(label, font=font)
+                    else:
+                        text_width, text_height = font.getsize(label)
+                    
+                    # Draw text background
+                    draw.rectangle([x1, y1 - text_height - 4, x1 + text_width + 4, y1], fill=color)
+                    # Draw text
+                    draw.text((x1 + 2, y1 - text_height - 2), label, fill="white", font=font)
+            
+            return img
+        except Exception as e:
+            print(f"Error drawing categorized boxes: {e}")
             return img
