@@ -1,6 +1,6 @@
 # Trayce - Lunch Tray Sorter
 
-A smart waste-sorting assistant that uses computer vision (specifically YOLOv11 object detection) to identify and classify food tray contents into trash, recycle, compost, or dish return — making disposal effortless and eco-friendly.
+A smart waste-sorting assistant that uses computer vision (Google's Gemini API) to identify and classify food tray contents into trash, recycle, compost, or dish return — making disposal effortless and eco-friendly.
 
 ## Features
 
