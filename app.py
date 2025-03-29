@@ -5,6 +5,11 @@ import base64
 from flask import Flask, Response, render_template, request, jsonify
 from ultralytics import YOLO
 from werkzeug.utils import secure_filename
+from gemini_spatial import GeminiSpatial
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Set environment variable to skip authorization
 os.environ['OPENCV_AVFOUNDATION_SKIP_AUTH'] = '1'
@@ -20,6 +25,9 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload size
 
 # Load the YOLOv11 model
 model = YOLO('yolo11n.pt')  # Using the nano model for faster inference
+
+# Initialize Gemini Spatial
+gemini = GeminiSpatial()
 
 # COCO dataset class names
 COCO_CLASSES = [
@@ -169,6 +177,52 @@ def upload_file():
         return jsonify({
             'image': f"data:image/jpeg;base64,{img_base64}",
             'detections': detections
+        })
+
+@app.route('/gemini_detect', methods=['POST'])
+def gemini_detect():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    
+    file = request.files['file']
+    
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+    
+    if file:
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+        
+        # Process the uploaded image with Gemini
+        img_base64, detections = gemini.detect_objects(file_path)
+        
+        return jsonify({
+            'image': f"data:image/jpeg;base64,{img_base64}",
+            'detections': detections
+        })
+
+@app.route('/analyze_tray', methods=['POST'])
+def analyze_tray():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    
+    file = request.files['file']
+    
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+    
+    if file:
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+        
+        # Process the uploaded image with Gemini for tray analysis
+        img_base64, categorized_items = gemini.analyze_tray(file_path)
+        
+        return jsonify({
+            'image': f"data:image/jpeg;base64,{img_base64}",
+            'categorized_items': categorized_items
         })
 
 if __name__ == '__main__':

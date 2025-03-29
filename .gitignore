@@ -34,3 +34,6 @@ ENV/
 uploads/*
 !uploads/.gitkeep
 *.pt
+
+# Environment variables
+.env
