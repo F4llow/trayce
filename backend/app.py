@@ -77,13 +77,7 @@ def generate_frames():
                     x1, y1, x2, y2 = box.xyxy[0].tolist()
                     confidence = box.conf.item()
                     
-                    # Draw bounding box
-                    cv2.rectangle(annotated_frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
-                    
-                    # Add label with class name and confidence
-                    label = f"{class_name}: {confidence:.2f}"
-                    cv2.putText(annotated_frame, label, (int(x1), int(y1) - 10),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                    # Do not draw bounding box 
             
             # Convert to jpeg format
             ret, buffer = cv2.imencode('.jpg', annotated_frame)
