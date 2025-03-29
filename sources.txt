@@ -1,0 +1,2 @@
+Gemini: https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Spatial_understanding.ipynb
+https://ai.google.dev/gemini-api/docs/vision?lang=python
