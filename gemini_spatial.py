@@ -98,9 +98,10 @@ class GeminiSpatial:
         Analyze this lunch tray image. Identify all food items, containers, and utensils.
         For each item, determine which disposal category it belongs to:
         - Trash (non-recyclable items)
-        - Recycling (plastic, metal, glass containers)
+        - Recycling (plastic, metal, glass containers, apple sauce, Plastic utensils)
         - Compost (food waste, napkins, paper products)
-        - Dish Return (reusable trays, plates, silverware)
+        - Dish Return (reusable trays, plates, silverware, glass products)
+
         
         Return the results as a JSON array with these fields:
         - label: name of the item

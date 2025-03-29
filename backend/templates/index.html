@@ -213,6 +213,7 @@
             // Show loading indicator
             document.getElementById('loading').style.display = 'block';
             document.getElementById('result-container').style.display = 'none';
+            document.getElementById('tray-score').innerHTML = '';
             
             fetch('/upload', {
                 method: 'POST',
@@ -226,6 +227,27 @@
                 // Display the result
                 document.getElementById('result-container').style.display = 'block';
                 document.getElementById('result-image').src = data.image;
+
+                if (data.tray_score !== undefined) {
+                const trayScore = data.tray_score;
+                let scoreMessage = '';
+                let scoreColor = '';
+
+                if (trayScore >= 60) {
+                    scoreMessage = 'Highly Recyclable';
+                    scoreColor = 'green';
+                } else if (trayScore >= 30) {
+                    scoreMessage = 'Partially Recyclable';
+                    scoreColor = 'orange';
+                } else {
+                    scoreMessage = 'Not Recyclable';
+                    scoreColor = 'red';
+                }
+
+                document.getElementById('tray-score').innerHTML = `
+                <h3 style="color: ${scoreColor};"> Recyclability Score: ${trayScore} - ${scoreMessage}</h3>
+            `;
+        }
                 
                 // Display detections
                 const detectionsListElement = document.getElementById('detections-list');
