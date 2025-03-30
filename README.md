@@ -57,7 +57,7 @@ A smart waste-sorting assistant that uses computer vision to identify and classi
    python3 app.py
    ```
    
-5. Open the `frontend` folder and install the required dependences:
+5. Open the `frontend` folder and install the required dependences (with the flag `--legacy-peer-deps` or `--force` if necessary):
    ```
    cd frontend
    npm install
