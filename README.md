@@ -50,15 +50,21 @@ A smart waste-sorting assistant that uses computer vision to identify and classi
    pip install -r requirements.txt
    ```
 
-3. Run the application's backend:
+3. Add a environment file named `.env` and assign your Gemini API key to `GEMINI_API_KEY.`
+
+4. Run the application's backend:
    ```
    python3 app.py
    ```
    
-4. Open the `backend` folder and install the required packages inside of a virtual environment:
+5. Open the `frontend` folder and install the required dependences:
    ```
    cd frontend
    npm install
+   ```
+   
+6. Run app:
+   ```
    npm run dev
    ```
 
