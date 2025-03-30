@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lunch Tray Sorter - Object Detection</title>
+    <title>Trayce</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -170,6 +170,12 @@
             background-color: #FF9800;
             color: white;
         }
+        .login-reminder {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ffcccc;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -206,6 +212,11 @@
         </div>
         
         <div id="tray-tab" class="tab-content">
+            {% if not session.get('user') %}
+            <div class="login-reminder">
+                <p>⚠️ You are not logged in. <a href="/login">Login</a> to save your meal history and track your nutrition over time.</p>
+            </div>
+            {% endif %}
             <div class="upload-area" onclick="document.getElementById('tray-file-input').click()">
                 <p>Click to select a lunch tray image or drag and drop for disposal analysis</p>
                 <input type="file" id="tray-file-input" accept="image/*" onchange="handleFileSelect(this.files, 'tray')">
