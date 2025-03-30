@@ -91,3 +91,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 - Google Gemini's API for computer vision object classification.
+
+## View our project on devpost: [https://devpost.com/software/sortmyfood?ref_content=user-portfolio&ref_feature=in_progress]
