@@ -1,11 +1,11 @@
 # Trayce: The Tray Waste Sorter
 
-A smart waste-sorting assistant that uses computer vision (Google's Gemini API) to identify and classify food tray contents into trash, recycle, compost, or dish return — making disposal effortless and eco-friendly.
+A smart waste-sorting assistant that uses computer vision to identify and classify food tray contents into trash, recycle, compost, or dish return — making disposal effortless and eco-friendly.
 
 ## Features
 
 - Real-time object detection using YOLOv11, the latest version of YOLO
-- Webcam integration for live detection
+- Webcam integration for live detection using Gemini 2.0
 - Image upload functionality for analyzing static images
 - Focused detection of food and dining-related items
 - Configurable confidence threshold for detections
@@ -36,7 +36,7 @@ A smart waste-sorting assistant that uses computer vision (Google's Gemini API) 
 
 ### Installation
 
-1. Clone the repository:
+1. Clone the repository and open it locally:
    ```
    git clone https://github.com/F4llow/trayce.git
    cd trayce
@@ -52,12 +52,13 @@ A smart waste-sorting assistant that uses computer vision (Google's Gemini API) 
 
 3. Run the application's backend:
    ```
-   python app.py
+   python3 app.py
    ```
    
 4. Open the `backend` folder and install the required packages inside of a virtual environment:
    ```
    cd frontend
+   npm install
    npm run dev
    ```
 
