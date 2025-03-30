@@ -57,18 +57,6 @@ A smart waste-sorting assistant that uses computer vision to identify and classi
    ```
    python3 app.py
    ```
-   
-5. Open the `frontend` folder and install the required dependences (with the flag `--legacy-peer-deps` if necessary):
-   ```
-   cd frontend
-   npm install --legacy-peer-deps
-   ```
-
-Note: If any dependencies can not be resolved, install them with the same flag: ```npm install <dependency> --legacy-peer-deps```.
-   
-6. Run app:
-   ```
-   npm run dev
    ```
 
 ## Usage
