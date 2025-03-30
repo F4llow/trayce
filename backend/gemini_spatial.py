@@ -175,6 +175,71 @@ class GeminiSpatial:
             print(f"Error in analyze_tray: {e}")
             return None, {"error": str(e)}
     
+    def identify_food_items(self, categorized_items):
+        """
+        Use Gemini to identify which items in the categorized_items list are food items.
+        
+        Args:
+            categorized_items: List of items detected in the image
+            
+        Returns:
+            List of food items only
+        """
+        try:
+            # Create a prompt for Gemini to identify food items
+            items_text = ", ".join([item.get('label', '') for item in categorized_items])
+            
+            prompt = f"""
+            From the following list of items, identify which ones are food or beverage items:
+            {items_text}
+            
+            Return only the food and beverage items in a JSON array format with the same structure as the original items.
+            Each item should have the same properties as in the original list.
+            """
+            
+            # Call Gemini API
+            model = genai.GenerativeModel(
+                model_name=self.model_name,
+                safety_settings=SAFETY_SETTINGS
+            )
+            
+            response = model.generate_content(prompt)
+            
+            # Parse the response
+            if hasattr(response, 'text'):
+                try:
+                    # Extract JSON from the response
+                    response_text = response.text
+                    # Look for JSON array in the response
+                    start_idx = response_text.find('[')
+                    end_idx = response_text.rfind(']') + 1
+                    
+                    if start_idx >= 0 and end_idx > start_idx:
+                        json_str = response_text[start_idx:end_idx]
+                        food_items = json.loads(json_str)
+                        return food_items
+                except json.JSONDecodeError:
+                    print("Failed to parse Gemini response as JSON")
+            
+            # Fallback: Use a simple heuristic if Gemini fails
+            food_categories = ['food', 'fruit', 'vegetable', 'dessert', 'snack', 'meal', 
+                              'bread', 'meat', 'dairy', 'drink', 'beverage', 'sandwich', 
+                              'pizza', 'pasta', 'rice', 'soup', 'salad', 'breakfast', 'lunch', 'dinner']
+            
+            food_items = [item for item in categorized_items 
+                         if any(cat in item.get('label', '').lower() for cat in food_categories)]
+            
+            # If no food items found, return all items
+            if not food_items:
+                return categorized_items
+                
+            return food_items
+            
+        except Exception as e:
+            print(f"Error identifying food items: {e}")
+            # Fallback to returning all items
+            return categorized_items
+    
     def _parse_json(self, json_output):
         """
         Parse JSON from the model response, handling potential formatting issues

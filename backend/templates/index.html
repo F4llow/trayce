@@ -127,10 +127,70 @@
         .dish_return {
             background-color: #ffffcc;
         }
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .auth-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .login-btn {
+            background-color: #4285F4;
+            color: white;
+        }
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        .history-btn {
+            background-color: #FF9800;
+            color: white;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="user-info">
+            {% if session.get('user') %}
+            <div class="user-profile">
+                <span>{{ session.get('user') }}</span>
+            </div>
+            <div class="auth-buttons">
+                <a href="/meal_history" class="auth-btn history-btn">Meal History</a>
+                <a href="/logout" class="auth-btn logout-btn">Logout</a>
+            </div>
+            {% else %}
+            <div>Not logged in</div>
+            <div class="auth-buttons">
+                <a href="/login" class="auth-btn login-btn">Login</a>
+            </div>
+            {% endif %}
+        </div>
+
         <h1>Lunch Tray Sorter</h1>
         <p>Real-time object detection using YOLOv11</p>
         
