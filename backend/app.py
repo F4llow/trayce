@@ -59,7 +59,7 @@ WHITELIST_CLASSES = [
 CONFIDENCE_THRESHOLD = 0.30  # Default is 0.25 (25%)
 
 def generate_frames():
-    # Access webcam (0 is usually the default webcam)
+    # Access webcam (0 is usually the default webcam, 2 is typically the external webcam)
     cap = cv2.VideoCapture(0)
     
     while True:
