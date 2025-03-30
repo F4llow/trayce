@@ -57,11 +57,13 @@ A smart waste-sorting assistant that uses computer vision to identify and classi
    python3 app.py
    ```
    
-5. Open the `frontend` folder and install the required dependences (with the flag `--legacy-peer-deps` or `--force` if necessary):
+5. Open the `frontend` folder and install the required dependences (with the flag `--legacy-peer-deps` if necessary):
    ```
    cd frontend
-   npm install
+   npm install --legacy-peer-deps
    ```
+
+Note: If any dependencies can not be resolved, install them with the same flag: ```npm install <dependency> --legacy-peer-deps```.
    
 6. Run app:
    ```
@@ -87,5 +89,4 @@ A smart waste-sorting assistant that uses computer vision to identify and classi
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
-
 - Google Gemini's API for computer vision 
