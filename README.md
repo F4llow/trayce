@@ -1,4 +1,4 @@
-# Trayce - Lunch Tray Sorter
+# Trayce: The Tray Waste Sorter
 
 A smart waste-sorting assistant that uses computer vision (Google's Gemini API) to identify and classify food tray contents into trash, recycle, compost, or dish return — making disposal effortless and eco-friendly.
 
@@ -12,17 +12,27 @@ A smart waste-sorting assistant that uses computer vision (Google's Gemini API) 
 
 ## Technologies Used
 
-- YOLOv11 from Ultralytics for object detection
-- Flask for the web application backend
+### Frontend
+- React: A JavaScript library for building user interfaces.
+- TypeScript: A strongly typed superset of JavaScript.
+- React Router: For navigation and routing between pages.
+- Tailwind CSS: For styling components with utility-first CSS classes.
+- Axios: For making HTTP requests to the backend.
+
+### Backend
+- Flask: A Python web framework for building the backend API.
+- YOLO (Ultralytics): For object detection and classification.
 - OpenCV for image processing and webcam access
-- HTML, CSS, and JavaScript for the frontend
 
 ## Getting Started
 
 ### Prerequisites
 
-- Python 3.8 or higher
-- Webcam (for live detection)
+- Node.js 16.0+: Required for running the frontend.
+- Python 3.8+: Required for running the backend.
+- Package Managers:
+   - npm or yarn for the frontend.
+   - pip for the backend.
 
 ### Installation
 
@@ -32,31 +42,38 @@ A smart waste-sorting assistant that uses computer vision (Google's Gemini API) 
    cd trayce
    ```
 
-2. Install the required packages:
+2. Open the `backend` folder and install the required packages inside of a virtual environment:
    ```
+   cd backend
+   python3 -m venv venv
+   source venv/bin/activate
    pip install -r requirements.txt
    ```
 
-3. Run the application:
+3. Run the application's backend:
    ```
    python app.py
    ```
-
-4. Open your browser and navigate to:
+   
+4. Open the `backend` folder and install the required packages inside of a virtual environment:
    ```
-   http://127.0.0.1:5000/
+   cd frontend
+   npm run dev
    ```
 
 ## Usage
 
-### Webcam Detection
-- Select the "Webcam" tab to use your webcam for real-time object detection.
+### Computer Vision Scanner
+- Click on the "Start Scanning" button to start the webcam.
 
-### Image Upload
-- Select the "Upload Image" tab.
-- Click on the upload area to select an image or drag and drop an image.
-- Click "Upload and Detect" to process the image.
-- View the list of recyclable objects. 
+### Webcam Detection
+- Make sure that the webcam is under good lighting and that all items are clearly visible.
+- Click on the "Capture Image" button to take a picture of your tray.
+
+### Results Analysis
+- View your tray analysis as an image labeled by Gemini AI object identification.
+- Click the "View All Items" button to view the full list of identified objects, sorted by category. 
+- Click the "Scan Again" button to restart the process.
 
 ## License
 
