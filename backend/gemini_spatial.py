@@ -193,8 +193,9 @@ class GeminiSpatial:
             From the following list of items, identify which ones are food or beverage items:
             {items_text}
             
-            Return only the food and beverage items in a JSON array format with the same structure as the original items.
-            Each item should have the same properties as in the original list.
+            Return ONLY the food and beverage items as a simple array of strings.
+            Format your response as a valid JSON array of strings, like this: ["Apple", "Sandwich", "Orange Juice"]
+            Do not include any non-food items or any additional information, properties, or explanations.
             """
             
             # Call Gemini API
@@ -217,21 +218,27 @@ class GeminiSpatial:
                     if start_idx >= 0 and end_idx > start_idx:
                         json_str = response_text[start_idx:end_idx]
                         food_items = json.loads(json_str)
+                        # Ensure all items are strings
+                        food_items = [str(item) for item in food_items if item]
                         return food_items
                 except json.JSONDecodeError:
                     print("Failed to parse Gemini response as JSON")
             
             # Fallback: Use a simple heuristic if Gemini fails
             food_categories = ['food', 'fruit', 'vegetable', 'dessert', 'snack', 'meal', 
-                              'bread', 'meat', 'dairy', 'drink', 'beverage', 'sandwich', 
-                              'pizza', 'pasta', 'rice', 'soup', 'salad', 'breakfast', 'lunch', 'dinner']
+                               'bread', 'meat', 'dairy', 'drink', 'beverage', 'sandwich', 
+                               'pizza', 'pasta', 'rice', 'soup', 'salad', 'breakfast', 'lunch', 'dinner']
             
-            food_items = [item for item in categorized_items 
-                         if any(cat in item.get('label', '').lower() for cat in food_categories)]
+            # Extract labels from items and filter for food categories
+            food_items = []
+            for item in categorized_items:
+                label = item.get('label', '')
+                if any(cat in label.lower() for cat in food_categories):
+                    food_items.append(label)
             
-            # If no food items found, return all items
+            # If no food items found, extract all labels as fallback
             if not food_items:
-                return categorized_items
+                food_items = [item.get('label', '') for item in categorized_items if item.get('label')]
                 
             return food_items
             

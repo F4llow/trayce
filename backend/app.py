@@ -344,19 +344,17 @@ def analyze_tray():
             food_items = gemini.identify_food_items(categorized_items)
             
             # Get calorie information for each food item
+            processed_food_items = []
             for item in food_items:
                 calories_info = get_calories_for_food(item)
                 if calories_info:
                     item_dict = {"name": item, "calories": calories_info}
                 else:
                     item_dict = {"name": item, "calories": None}
-                
-                # Replace the string item with a dictionary containing name and calories
-                index = food_items.index(item)
-                food_items[index] = item_dict
+                processed_food_items.append(item_dict)
             
             # Calculate total calories
-            total_calories = sum(item["calories"]["calories"] if item["calories"] else 0 for item in food_items)
+            total_calories = sum(item["calories"]["calories"] if item["calories"] else 0 for item in processed_food_items)
             
             # Save the meal data to the database
             conn = sqlite3.connect(DB_PATH)
@@ -382,7 +380,7 @@ def analyze_tray():
                     session['user'],
                     datetime.now().isoformat(),
                     img_base64,
-                    json.dumps(food_items),
+                    json.dumps(processed_food_items),
                     None,  # Tray score (to be implemented later)
                     total_calories
                 )
@@ -394,7 +392,7 @@ def analyze_tray():
             return jsonify({
                 'image': f"data:image/jpeg;base64,{img_base64}",
                 'categorized_items': categorized_items,
-                'food_items': food_items,
+                'food_items': processed_food_items,
                 'total_calories': total_calories
             })
             
