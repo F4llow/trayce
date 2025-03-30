@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom'
 import { Camera, Trash2, Recycle, Leaf, UtensilsCrossed } from 'lucide-react';
@@ -50,10 +49,10 @@ const Index = () => {
           </div>
           
           <Button
-            onClick={() => navigate("/webcam")}
-            className="w-full py-6 text-lg"
+            onClick={() => navigate("/scan")}
+            className="w-full py-6 text-lg text-gray-800"
           >
-            <Camera className="mr-2 h-6 w-6 text-gray-800" />
+            <Camera className="mr-2 h-6 w-6" />
             Start Scanning
           </Button>
         </div>

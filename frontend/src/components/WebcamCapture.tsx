@@ -65,10 +65,10 @@ const WebcamCapture: React.FC<WebcamCaptureProps> = ({ onCapture }) => {
       <Button 
         onClick={handleCapture} 
         disabled={!isCameraReady}
-        className="w-full max-w-md mt-2"
+        className="w-full max-w-md mt-2 text-gray-800"
       >
-        <Camera className="mr-2 h-5 w-5 text-gray-800" />
-        <p className="text-gray-800">Capture Image</p>
+        <Camera className="mr-2 h-5 w-5" />
+        Capture Image
       </Button>
     </div>
   );
