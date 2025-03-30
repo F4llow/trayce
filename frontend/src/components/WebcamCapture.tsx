@@ -4,29 +4,49 @@ import Webcam from "react-webcam";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Camera, RefreshCw } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface WebcamCaptureProps {
   onCapture: (imageSrc: string) => void;
 }
 
 const WebcamCapture: React.FC<WebcamCaptureProps> = ({ onCapture }) => {
+  const navigate = useNavigate(); // Initialize useNavigate
   const webcamRef = useRef<Webcam>(null);
   const [isCameraReady, setIsCameraReady] = useState(false);
   const [facingMode, setFacingMode] = useState<"user" | "environment">("environment");
+  const BACKEND_URL = "http://127.0.0.1:5000";
 
   const handleCapture = useCallback(async () => {
     const imageSrc = webcamRef.current?.getScreenshot();
+
     if (imageSrc) {
       try {
-        // Send the captured image to the backend
-        const response = await axios.post("/api/classify", { image: imageSrc });
+        console.log("Captured image:", imageSrc); // Debugging
+  
+        // Send the captured image to the backend with custom headers
+        const response = await axios.post(
+          `${BACKEND_URL}/upload`,
+          { image: imageSrc },
+          {
+            headers: {
+              "Content-Type": "application/json", // Content type is JSON
+              // "Authorization": "Bearer YOUR_TOKEN_HERE", // 
+            },
+          }
+        );
+  
+        console.log("Backend response:", response.data); // Debugging
         const { result } = response.data;
 
         // Pass the backend result to the onCapture callback
         onCapture(result);
+
+        // Navigate to the results page with the result as state
+        navigate("/results", { state: { result } });
       } catch (error) {
         console.error("Error sending image to backend:", error);
-        onCapture("Error: Unable to classify image");
+        onCapture("Error: Unable to catalogue image.");
       }
     }
   }, [webcamRef, onCapture]);

@@ -16,6 +16,7 @@ interface LocationState {
 const ResultsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { result } = location.state || {};  // Result from backend
   const { items, image } = (location.state as LocationState) || { items: [], image: "" };
   
   if (!items.length) {
@@ -45,7 +46,7 @@ const ResultsPage = () => {
         
         <div className="mb-6">
           <div className="rounded-lg overflow-hidden border-2 border-primary mb-4">
-            <img src={image} alt="Captured tray" className="w-full h-auto" />
+            <img src={result} alt="Captured tray" className="w-full h-auto" />
           </div>
           
           <div className="space-y-4">

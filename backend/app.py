@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 from gemini_spatial import GeminiSpatial
 from dotenv import load_dotenv
 from recyability import compute_tray_score
+from flask_cors import CORS
 
 
 # Load environment variables
@@ -24,6 +25,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload size
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 # Load the YOLOv11 model
 model = YOLO('yolo11n.pt')  # Using the nano model for faster inference
@@ -158,26 +160,28 @@ def video_feed():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part'}), 400
-    
-    file = request.files['file']
-    
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
-    
-    if file:
-        filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(file_path)
-        
+    data = request.json  # Expecting JSON payload
+    if 'image' not in data:
+        return jsonify({'error': 'No image provided'}), 400
+
+    try:
+        # Decode the base64 image
+        image_data = base64.b64decode(data['image'].split(',')[1]) 
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'captured_image.jpg')
+        with open(file_path, 'wb') as f:
+            f.write(image_data)
+        print(f"Image saved to {file_path}")  # Debugging
+
         # Process the uploaded image
         img_base64, detections = process_image(file_path)
-        
+
         return jsonify({
             'image': f"data:image/jpeg;base64,{img_base64}",
             'detections': detections
         })
+    except Exception as e:
+        print(f"Error decoding image: {e}")  # Debugging
+        return jsonify({'error': 'Failed to decode image'}), 400
 
 @app.route('/gemini_detect', methods=['POST'])
 def gemini_detect():

@@ -11,7 +11,7 @@ const WebcamPage = () => {
   const [isLoading, setLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  let BACKEND_URL = "http://127.0.0.1:5000";
+  const BACKEND_URL = "http://127.0.0.1:5000";
 
   const handleCapture = async () => {
     if (!canvasRef.current || !videoRef.current) return;
@@ -67,7 +67,7 @@ const WebcamPage = () => {
       <div className="max-w-md w-full">
         <Header
           title="Scan Your Tray"
-          subtitle="Position all items clearly in the camera view"
+          subtitle="Position all items clearly in the camera view."
         />
 
         {isLoading ? (

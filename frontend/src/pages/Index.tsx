@@ -11,7 +11,7 @@ const Index = () => {
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
           <Header 
             title="Traycer" 
-            subtitle="Use computer vision for sustainable waste management" 
+            subtitle="Using computer vision for sustainable waste management." 
           />
           
           <div className="mb-8 text-center">
