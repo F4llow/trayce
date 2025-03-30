@@ -25,6 +25,9 @@ A smart waste-sorting assistant that uses computer vision to identify and classi
 - Google Gemini: For AI object identification and classification.
 - OpenCV for image processing and webcam access
 
+## Authenication 
+- Auth0 
+
 ## Getting Started
 
 ### Prerequisites
@@ -59,6 +62,9 @@ A smart waste-sorting assistant that uses computer vision to identify and classi
    ```
 
 ## Usage
+
+### Login in 
+- Click Login and sign in with Gmail
 
 ### Computer Vision Scanner
 - Click on the "Start Scanning" button to start the webcam.
