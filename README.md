@@ -57,7 +57,6 @@ A smart waste-sorting assistant that uses computer vision to identify and classi
    ```
    python3 app.py
    ```
-   ```
 
 ## Usage
 
