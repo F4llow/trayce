@@ -21,7 +21,8 @@ A smart waste-sorting assistant that uses computer vision to identify and classi
 
 ### Backend
 - Flask: A Python web framework for building the backend API.
-- YOLO (Ultralytics): For object detection and classification.
+- YOLO (Ultralytics): For object detection.
+- Google Gemini: For AI object identification and classification.
 - OpenCV for image processing and webcam access
 
 ## Getting Started
@@ -89,4 +90,4 @@ Note: If any dependencies can not be resolved, install them with the same flag: 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
-- Google Gemini's API for computer vision 
+- Google Gemini's API for computer vision object classification.
