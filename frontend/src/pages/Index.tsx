@@ -53,7 +53,7 @@ const Index = () => {
             onClick={() => navigate("/webcam")}
             className="w-full py-6 text-lg"
           >
-            <Camera className="mr-2 h-6 w-6" />
+            <Camera className="mr-2 h-6 w-6 text-gray-800" />
             Start Scanning
           </Button>
         </div>
