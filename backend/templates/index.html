@@ -191,55 +191,17 @@
             {% endif %}
         </div>
 
-        <h1>Lunch Tray Sorter</h1>
-        <p>Real-time object detection using YOLOv11</p>
+        <h1>Trayce</h1>
+        <p>Meal tracking and nutrition analysis</p>
         
         <div class="tabs">
             <div class="tab active" onclick="openTab('webcam-tab')">Webcam</div>
-            <div class="tab" onclick="openTab('upload-tab')">Upload Image</div>
-            <div class="tab" onclick="openTab('gemini-tab')">Gemini Detection</div>
             <div class="tab" onclick="openTab('tray-tab')">Tray Analysis</div>
         </div>
         
         <div id="webcam-tab" class="tab-content active">
             <div class="video-container">
                 <img src="{{ url_for('video_feed') }}" alt="Video Feed">
-            </div>
-        </div>
-        
-        <div id="upload-tab" class="tab-content">
-            <div class="upload-area" onclick="document.getElementById('file-input').click()">
-                <p>Click to select an image or drag and drop</p>
-                <input type="file" id="file-input" accept="image/*" onchange="handleFileSelect(this.files, 'upload')">
-            </div>
-            <button class="upload-btn" onclick="uploadImage('upload')">Upload and Detect</button>
-            
-            <div class="loading" id="loading">
-                <p>Processing image...</p>
-            </div>
-            
-            <div id="result-container">
-                <h3>Detection Results:</h3>
-                <img id="result-image" src="" alt="Processed Image">
-                <div class="detection-list" id="detections-list"></div>
-            </div>
-        </div>
-        
-        <div id="gemini-tab" class="tab-content">
-            <div class="upload-area" onclick="document.getElementById('gemini-file-input').click()">
-                <p>Click to select an image or drag and drop for Gemini detection</p>
-                <input type="file" id="gemini-file-input" accept="image/*" onchange="handleFileSelect(this.files, 'gemini')">
-            </div>
-            <button class="upload-btn" onclick="uploadImage('gemini')">Upload and Detect with Gemini</button>
-            
-            <div class="loading" id="gemini-loading">
-                <p>Processing image with Gemini AI...</p>
-            </div>
-            
-            <div id="gemini-result-container">
-                <h3>Gemini Detection Results:</h3>
-                <img id="gemini-result-image" src="" alt="Processed Image">
-                <div class="detection-list" id="gemini-detections-list"></div>
             </div>
         </div>
         
@@ -272,10 +234,12 @@
         
         <div class="info">
             <h3>How it works:</h3>
-            <p>This application uses YOLOv11 (the latest version) to detect objects in real-time from your webcam. 
-            The model identifies common objects and displays bounding boxes around them with labels.</p>
-            <p>The Gemini AI features provide enhanced spatial reasoning and can analyze lunch tray contents to help sort items into the proper disposal categories (trash, recycling, compost, or dish return).</p>
-            <p><strong>Features:</strong> Enhanced accuracy and speed with YOLOv11 technology, focused on detecting food and dining-related items, plus Gemini AI spatial reasoning.</p>
+            <p>Trayce helps you track your meals and their nutritional content. The application uses two main features:</p>
+            <ul>
+                <li><strong>Webcam Detection:</strong> Real-time object detection using YOLOv11 to identify items in your webcam feed.</li>
+                <li><strong>Tray Analysis:</strong> Upload images of your meals to identify food items, track calories, and analyze nutritional content.</li>
+            </ul>
+            <p>When you analyze a tray, Gemini AI identifies the food items, and the USDA FoodData Central API provides calorie information. Your meal history is saved when you're logged in, allowing you to track your eating habits over time.</p>
             <p><strong>Note:</strong> The first run might take a moment as the models are loaded.</p>
         </div>
     </div>
